@@ -1,0 +1,97 @@
+{
+  "name": "AFK Bot",
+  "bot-account": {
+    "username": "ZestyBOT",
+    "password": "",
+    "type": "offline"
+  },
+  "server": {
+    "ip": "Fax_Cap.aternos.me",
+    "port": 40871,
+    "version": "",
+    "try-creative": false
+  },
+  "position": {
+    "enabled": true,
+    "x": 0,
+    "y": 100,
+    "z": 0
+  },
+  "utils": {
+    "auto-auth": {
+      "enabled": true,
+      "password": "chalol78"
+    },
+    "anti-afk": {
+      "enabled": true,
+      "sneak": true
+    },
+    "chat-messages": {
+      "enabled": true,
+      "repeat": true,
+      "repeat-delay": 1200000,
+      "messages": [
+        "Abhijeet is a noob",
+        "Jayesh is vaniyar",
+        "I swear I'm not a bot. Beep boop... I mean, hi!",
+        "Has anyone seen my dog? I left him here somewhere",
+        "Just vibing here, don't mind me",
+        "Fun fact: dirt is just sad grass",
+        "I've been standing here for hours and I'm NOT bored at all",
+        "My mom said I could be anything, so I became a Minecraft player",
+        "Anyone know a good recipe for TNT? Asking for a friend",
+        "If a creeper explodes in the forest and no one is around, does it still ruin my day?",
+        "Roses are red, violets are blue, I just died to lava, and so will you",
+        "I asked a skeleton for directions. He was dead inside. So was I.",
+        "I once tried to sleep during the day. The bed called the cops."
+      ]
+    },
+    "chat-log": true,
+    "auto-reconnect": true,
+    "auto-reconnect-delay": 2000,
+    "max-reconnect-delay": 120000
+  },
+  "movement": {
+    "enabled": true,
+    "circle-walk": {
+      "enabled": true,
+      "radius": 4,
+      "speed": 3000
+    },
+    "look-around": {
+      "enabled": true,
+      "interval": 5000
+    },
+    "random-jump": {
+      "enabled": true,
+      "interval": 10000
+    }
+  },
+  "modules": {
+    "avoidMobs": true,
+    "combat": true,
+    "beds": false,
+    "chat": true,
+    "console-commands": true
+  },
+  "combat": {
+    "attack-mobs": true,
+    "auto-eat": true
+  },
+  "beds": {
+    "pick-up-day": false,
+    "place-night": false
+  },
+  "discord": {
+    "enabled": true,
+    "webhookUrl": "YOUR_DISCORD_WEBHOOK_URL_HERE",
+    "events": {
+      "connect": true,
+      "disconnect": true,
+      "chat": false
+    }
+  },
+  "chat": {
+    "respond": true
+  }
+}
