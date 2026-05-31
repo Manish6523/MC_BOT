@@ -29,7 +29,8 @@
     "chat-messages": {
       "enabled": true,
       "repeat": true,
-      "repeat-delay": 1200000,
+      "min-delay": 180,
+      "max-delay": 480,
       "messages": [
         "Abhijeet is a noob",
         "Jayesh is vaniyar",
@@ -56,7 +57,7 @@
     "circle-walk": {
       "enabled": true,
       "radius": 4,
-      "speed": 3000
+      "speed": 4000
     },
     "look-around": {
       "enabled": true,
@@ -84,7 +85,7 @@
   },
   "discord": {
     "enabled": true,
-    "webhookUrl": "https://discordapp.com/api/webhooks/1509962948209148035/T0LdRu1ghyaGGSe-1rkIoUAXTjYo2xbUq0DJnfIJNlG54WDd3ioXRTE5o0x_3d_RqB8j",
+    "webhookUrl": "YOUR_DISCORD_WEBHOOK_URL_HERE",
     "events": {
       "connect": true,
       "disconnect": true,

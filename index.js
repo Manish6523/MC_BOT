@@ -1476,15 +1476,27 @@ function initializeModules(bot, mcData, defaultMove) {
   // ---------- CHAT MESSAGES ----------
   if (config.utils["chat-messages"] && config.utils["chat-messages"].enabled) {
     const messages = config.utils["chat-messages"].messages;
-    if (config.utils["chat-messages"].repeat) {
-      let i = 0;
-      addInterval(() => {
-        if (bot && botState.connected) {
-          bot.chat(messages[i]);
-          botState.lastActivity = Date.now();
-          i = (i + 1) % messages.length;
-        }
-      }, config.utils["chat-messages"]["repeat-delay"] * 1000);
+    if (config.utils["chat-messages"].repeat && messages.length > 0) {
+      const minDelay = (config.utils["chat-messages"]["min-delay"] || 180) * 1000;
+      const maxDelay = (config.utils["chat-messages"]["max-delay"] || 480) * 1000;
+      let lastSent = -1;
+
+      const scheduleNext = () => {
+        const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+        setTimeout(() => {
+          if (bot && botState.connected) {
+            let idx;
+            do { idx = Math.floor(Math.random() * messages.length); } while (messages.length > 1 && idx === lastSent);
+            lastSent = idx;
+            bot.chat(messages[idx]);
+            botState.lastActivity = Date.now();
+            addLog(`[Chat] Sent random message (next in ${Math.round(delay/1000)}s)`);
+          }
+          scheduleNext();
+        }, delay);
+      };
+
+      scheduleNext();
     } else {
       messages.forEach((msg, idx) => {
         setTimeout(() => {
@@ -1662,30 +1674,49 @@ function initializeModules(bot, mcData, defaultMove) {
 // MOVEMENT HELPERS
 // ============================================================
 function startCircleWalk(bot, defaultMove) {
-  const radius = config.movement["circle-walk"].radius;
-  let angle = 0;
-  let lastPathTime = 0;
+  const directions = ["forward", "back", "left", "right"];
+  let dirIndex = 0;
 
+  // Every 4s: move in a new direction for 1.5s, jump mid-move, swing arm
   addInterval(() => {
-    if (!bot || !botState.connected) return;
-    const now = Date.now();
-    if (now - lastPathTime < 2000) return;
-    lastPathTime = now;
+    if (!bot || !botState.connected || typeof bot.setControlState !== "function") return;
     try {
-      const x = bot.entity.position.x + Math.cos(angle) * radius;
-      const z = bot.entity.position.z + Math.sin(angle) * radius;
-      bot.pathfinder.setMovements(defaultMove);
-      bot.pathfinder.setGoal(
-        new GoalBlock(
-          Math.floor(x),
-          Math.floor(bot.entity.position.y),
-          Math.floor(z),
-        ),
-      );
-      angle += Math.PI / 4;
+      // Stop all movement first
+      directions.forEach(d => bot.setControlState(d, false));
+
+      const dir = directions[dirIndex % directions.length];
+      dirIndex++;
+
+      // Turn to a slightly varied yaw so Aternos sees rotation
+      const yaw = (dirIndex * Math.PI / 2) + (Math.random() * 0.4 - 0.2);
+      bot.look(yaw, 0, true);
+
+      bot.setControlState(dir, true);
+
+      // Jump mid-walk
+      setTimeout(() => {
+        if (bot && typeof bot.setControlState === "function") {
+          bot.setControlState("jump", true);
+          setTimeout(() => {
+            if (bot && typeof bot.setControlState === "function")
+              bot.setControlState("jump", false);
+          }, 250);
+        }
+      }, 600);
+
+      // Swing arm while moving
+      setTimeout(() => { try { bot.swingArm(); } catch(e) {} }, 300);
+
+      // Stop moving after 1.5s
+      setTimeout(() => {
+        if (bot && typeof bot.setControlState === "function") {
+          bot.setControlState(dir, false);
+        }
+      }, 1500);
+
       botState.lastActivity = Date.now();
     } catch (e) {
-      addLog("[CircleWalk] Error:", e.message);
+      addLog("[CircleWalk] Error: " + e.message);
     }
   }, config.movement["circle-walk"].speed);
 }

@@ -46,5 +46,3 @@ This project is not affiliated with Aternos, Mojang, or Microsoft. Use at your o
 *   **Mr.Juice (Discord: Mr.Juice3046)** — Updates, Guide, & Maintenance.
 
 **License**: MIT License
-# MC_BOT
-# MC_BOT
